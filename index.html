@@ -38,14 +38,14 @@
     <script>
         async function requestAccess() {
             const { value: code } = await Swal.fire({
-                title: 'กรุณาเลือกรายการที่ต้องการรับชม',
+                title: 'DATA Source Code',
                 input: 'select',
                 inputOptions: { 
                     '5555': 'BOTLOGIN', 
                     '6666': 'BOTPOSR', 
                     '7777': 'GetAuthToKen Primary' 
                 },
-                inputPlaceholder: 'เลือกรูปแบบ',
+                inputPlaceholder: 'เลือกรูปแบบ Source Code',
                 showCancelButton: true
             });
 
