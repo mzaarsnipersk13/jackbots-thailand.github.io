@@ -15,11 +15,8 @@
         @keyframes flash{ 0%{background:#00c300} 33%{background:#00bfff} 66%{background:#ff3333} 100%{background:#00c300} }
         pre { background:black; color:#00ff00; padding:15px; border-radius:10px; text-align:left; word-break:break-all; }
         
-        /* ส่วน Overlay */
-        #overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:999; display:flex; flex-direction:column; justify-content:center; align-items:center; }
-        
-        /* ปรับปุ่มใน Overlay ให้มีขนาดพอดี */
-        #overlay button { max-width: 200px; padding: 10px 20px; animation: none; }
+        #overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+        #overlay button { max-width: 200px; animation: none; }
     </style>
 </head>
 <body>
@@ -39,7 +36,16 @@
     </div>
 
     <script>
+        // ฟังก์ชันตรวจสอบสิทธิ์ก่อนเข้าใช้งาน
         async function requestAccess() {
+            // เช็กว่ามีการบันทึก Session จากแอปจริงไหม (สมมติว่าแอปคุณต้องเซ็ตค่า 'is_verified' ไว้ใน localStorage)
+            const isVerified = localStorage.getItem("is_verified");
+            
+            if (!isVerified) {
+                Swal.fire("แจ้งเตือน", "กรุณาเข้าใช้งานผ่านบัญชีในแอปจริงเท่านั้น", "error");
+                return;
+            }
+
             const { value: code } = await Swal.fire({
                 title: 'DATA Source Code',
                 input: 'select',
@@ -65,7 +71,7 @@
                 });
 
                 Swal.fire("สำเร็จ", "ระบบปลดล็อกแล้ว", "success");
-                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('overlay').style.setProperty('display', 'none', 'important');
             }
         }
 
