@@ -52,10 +52,10 @@
                         Swal.fire("สำเร็จ", "ระบบปลดล็อกแล้ว", "success");
                         document.getElementById('overlay').style.display = 'none';
                     } else {
-                        Swal.fire("คุณใช้รูปแบบผิด ไม่อนุญาตครับ", "โปรดเรียกใช้ผ่าน Platform เช่น LINE FB IG TT เป็นต้นครับ", "error");
+                        Swal.fire("แจ้งเตือน", "ไม่สามารถติดต่อ Server ได้", "error");
                     }
                 } catch (err) {
-                    Swal.fire("คุณใช้รูปแบบผิด ไม่อนุญาตครับ", "โปรดเรียกใช้ผ่าน Platform เช่น LINE FB IG TT เป็นต้นครับ", "error");
+                    Swal.fire("ผิดพลาด", "การเชื่อมต่อขัดข้อง", "error");
                 }
             }
         }
