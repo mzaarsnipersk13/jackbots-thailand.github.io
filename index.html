@@ -1,55 +1,36 @@
-<script>
-    async function requestAccess() {
-        const { value: code } = await Swal.fire({
-            title: 'กรุณาเลือกรายการที่ต้องการรับชม',
-            input: 'select',
-            inputOptions: { 
-                '5555': 'BOTLOGIN', 
-                '6666': 'BOTPOSR', 
-                '7777': 'GetAuthToKen Primary' 
-            },
-            inputPlaceholder: 'เลือกรูปแบบ',
-            showCancelButton: true
-        });
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* สไตล์ CSS ของคุณอยู่ที่นี่ */
+        #overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:999; display:flex; justify-content:center; align-items:center; }
+    </style>
+</head>
+<body>
 
-        if (code) {
-            try {
-                // เรียกผ่าน Worker โดยตรง (ไม่ต้องใส่ IP)
-                const response = await fetch('/api/trigger-login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        userData: { mid: "User_" + code, service: code } 
-                    })
-                });
+    <div id="overlay">
+        <button onclick="requestAccess()" style="max-width:300px;">คลิกเพื่อเข้าดู</button>
+    </div>
 
-                if (response.ok) {
-                    Swal.fire("สำเร็จ", "ระบบปลดล็อกแล้ว", "success");
-                    document.getElementById('overlay').style.display = 'none';
-                } else {
-                    Swal.fire("แจ้งเตือน", "ไม่สามารถเชื่อมต่อ Server ได้ (สถานะ: " + response.status + ")", "error");
-                }
-            } catch (err) {
-                Swal.fire("ผิดพลาด", "การเชื่อมต่อขัดข้อง กรุณาลองใหม่", "error");
-            }
+    <div class="box">
+        <input id="userid" placeholder="User ID">
+        <input id="secret" placeholder="Secret Key">
+        <button onclick="createToken()">สร้าง Token</button>
+        <pre id="output">รอข้อมูล...</pre>
+    </div>
+
+    <script>
+        async function requestAccess() {
+            // โค้ด JavaScript ที่คุณก๊อปปี้มา ใส่ไว้ในนี้ครับ
+            const { value: code } = await Swal.fire({ ... });
+            // ... ส่วนที่เหลือของโค้ด
         }
-    }
 
-    async function createToken() {
-        let userid = document.getElementById("userid").value;
-        let secret = document.getElementById("secret").value;
-        
-        try {
-            let res = await fetch("/generate", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userid, secret })
-            });
-            let data = await res.json();
-            document.getElementById("output").innerText = data.token || "ไม่พบ Token";
-            Swal.fire("สำเร็จ", "สร้าง Token แล้ว", "success");
-        } catch (err) {
-            Swal.fire("ผิดพลาด", "ไม่สามารถสร้าง Token ได้", "error");
+        async function createToken() {
+            // โค้ดสร้าง Token
         }
-    }
-</script>
+    </script>
+</body>
+</html>
