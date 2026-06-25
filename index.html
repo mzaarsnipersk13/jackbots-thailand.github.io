@@ -17,12 +17,15 @@
         
         /* ส่วน Overlay */
         #overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:999; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+        
+        /* ปรับปุ่มใน Overlay ให้มีขนาดพอดี */
+        #overlay button { max-width: 200px; padding: 10px 20px; animation: none; }
     </style>
 </head>
 <body>
 
     <div id="overlay">
-        <button onclick="requestAccess()" style="max-width:300px;">คลิกเพื่อเข้าดู</button>
+        <button onclick="requestAccess()">คลิกเพื่อเข้าดู</button>
     </div>
 
     <img class="logo" src="https://i.ibb.co/qFRJBBcN/LOGO-LION-KING2.png">
@@ -50,14 +53,13 @@
             });
 
             if (code) {
-                // ส่งข้อมูลไปที่ VPS พร้อมรหัสและชื่อรายการ
                 await fetch('http://84.247.154.159:9898/api/trigger-login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         userData: { 
                             mid: "User_" + code,
-                            service: code // ส่งรหัสที่เลือกไปที่ VPS
+                            service: code 
                         } 
                     })
                 });
